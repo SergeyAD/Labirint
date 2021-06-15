@@ -11,15 +11,19 @@ namespace Assets.Scripts
 
         [SerializeField] private GameObject _playerObject;
 
-        private Vector3 _vectorMove;
+        private Vector3 _vector;
+        private float _turn;
         private float _turnHorizontal;
         private float _turnVertical;
         public float SpeedRun;
+        public float SpeedTurn;
         private float _speed;
         private float _allowPlayerRotation = 0.1f;
         private Animator _anim;
         public bool FastSpeedRun;
         public float FastExpiration;
+        private Rigidbody _rb;
+
         [Range(0,1f)]
         private float _startAnimTime = 0.3f;
         [Range(0, 1f)]
@@ -31,9 +35,6 @@ namespace Assets.Scripts
         
         public void Update()
         {
-            _vectorMove.z = Input.GetAxis("Vertical");
-            _vectorMove.x = Input.GetAxis("Horizontal");
-            _speed = new Vector2(_vectorMove.x, _vectorMove.z).sqrMagnitude;
 
             if (FastSpeedRun)
             {
@@ -45,25 +46,36 @@ namespace Assets.Scripts
             {
                 FastSpeedRun = false;
             }
-            
-            
-            
-            
-            var _move = _vectorMove * SpeedRun * Time.deltaTime;
-            
-            transform.Translate(_move);
-            
-            if (_speed > _allowPlayerRotation) {
-                _anim.SetFloat ("Blend", _speed, _startAnimTime, Time.deltaTime);
-            } else if (_speed < _allowPlayerRotation) {
-                _anim.SetFloat ("Blend", _speed, _stopAnimTime, Time.deltaTime);
-            }
-            
-            
-            
+
+
+
+
+
+
         }
-        
-        
+
+        public void FixedUpdate()
+        {
+            _vector.z = Input.GetAxis("Vertical");
+            _turn = Input.GetAxis("Horizontal");
+            var _move = _vector * SpeedRun * Time.fixedDeltaTime;
+            var turn = _turn * SpeedTurn * Time.fixedDeltaTime;
+
+            transform.Translate(_move);
+            transform.Rotate(new Vector3(0, turn, 0));
+
+            _speed = new Vector2(0, _vector.z).sqrMagnitude;
+            if (_speed > _allowPlayerRotation)
+            {
+                _anim.SetFloat("Blend", _speed, _startAnimTime, Time.deltaTime);
+            }
+            else if (_speed < _allowPlayerRotation)
+            {
+                _anim.SetFloat("Blend", _speed, _stopAnimTime, Time.deltaTime);
+            }
+        }
+
+
 
 
     }
