@@ -38,7 +38,6 @@ namespace Assets.Scripts
 
             if (FastSpeedRun)
             {
-                SpeedRun = SpeedRun * 2;
                 FastExpiration -= 1;
             }
 
@@ -47,19 +46,17 @@ namespace Assets.Scripts
                 FastSpeedRun = false;
             }
 
-
-
-
-
-
         }
 
         public void FixedUpdate()
         {
             _vector.z = Input.GetAxis("Vertical");
             _turn = Input.GetAxis("Horizontal");
-            var _move = _vector * SpeedRun * Time.fixedDeltaTime;
-            var turn = _turn * SpeedTurn * Time.fixedDeltaTime;
+            var _sr = FastSpeedRun ? SpeedRun : SpeedRun * 2;
+            var _st = FastSpeedRun ? SpeedTurn : SpeedTurn * 2;
+
+            var _move = _vector * _sr * Time.fixedDeltaTime;
+            var turn = _turn *_st * Time.fixedDeltaTime;
 
             transform.Translate(_move);
             transform.Rotate(new Vector3(0, turn, 0));

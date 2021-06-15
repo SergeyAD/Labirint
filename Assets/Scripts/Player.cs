@@ -24,17 +24,20 @@ namespace Assets.Scripts
             if (other.TryGetComponent(out BonusPointScript _point))
             {
             BonusCount += _point.BonusCount;
+            _point.BonusCount = 0;
             Lives -= _point.Damage;
-            if (_point.FastSpeed)
-            {
-                if (other.TryGetComponent(out MoveScript _move))
+            _point.Damage = 0;
+                if (_point.FastSpeed)
                 {
-                    _move.FastSpeedRun = true;
-                    _move.FastExpiration += 100 * Time.deltaTime;
+                    if (TryGetComponent(out MoveScript _move))
+                    {
+                        _move.FastSpeedRun = true;
+                        _move.FastExpiration += 1000;
+                    }
+                    _point.FastSpeed = false;
                 }
-            }
 
-                DestroyObject(other);
+            Destroy(other.gameObject);
 
             }
 
