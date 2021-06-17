@@ -43,7 +43,7 @@ namespace Assets.Scripts
                     }
                     _point.FastSpeed = false;
                 }
-            ChangePlayerEvent.Invoke();
+            ChangePlayerEvent?.Invoke();
 
             Destroy(other.gameObject);
 
