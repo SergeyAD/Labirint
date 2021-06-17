@@ -4,13 +4,19 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
+
     public class Player : MonoBehaviour//MoveScript
     {
         // Общий класс игрока
         public int Lives;
         public int BonusCount;
         private bool _isFastSpeed;
-        
+
+
+        public delegate void ChangePlayer();
+
+        public event ChangePlayer ChangePlayerEvent;
+
         private void Awake()
         {
         Lives = 3;
@@ -33,9 +39,11 @@ namespace Assets.Scripts
                     {
                         _move.FastSpeedRun = true;
                         _move.FastExpiration += 1000;
+                        
                     }
                     _point.FastSpeed = false;
                 }
+            ChangePlayerEvent.Invoke();
 
             Destroy(other.gameObject);
 
@@ -43,6 +51,11 @@ namespace Assets.Scripts
 
             
         }
+
+
+
+
+
 
 
     }
